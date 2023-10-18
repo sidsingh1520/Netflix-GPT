@@ -13,3 +13,5 @@
 - Netflix GPT
   - Search Bar
   - Movie Suggestions
+
+Note - Formik (build forms in react easily)
