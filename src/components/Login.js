@@ -7,9 +7,10 @@ import {
 	updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { BACKGROUND_IMG } from "../utils/constants";
+import { USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
 	const [isSignInForm, setIsSignInForm] = useState(true);
@@ -18,7 +19,6 @@ const Login = () => {
 	const password = useRef(null);
 	const name = useRef(null);
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const toggleSignInForm = () => {
 		setIsSignInForm(!isSignInForm);
@@ -41,8 +41,7 @@ const Login = () => {
 					const user = userCredential.user;
 					updateProfile(user, {
 						displayName: name.current.value,
-						photoURL:
-							"https://occ-0-6246-2186.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABdYJV5wt63AcxNaDoqDXUhqZb55oN5Dxt1m-Zdn_z5rn_hIq9m8dA8JB2xdcPmrY3yXnlVWYKPXnOrbv2QN4aEVU28dESJg.png?r=1d4",
+						photoURL: USER_AVATAR,
 					})
 						.then(() => {
 							const { uid, email, displayName, photoURL } = auth.currentUser;
@@ -55,12 +54,10 @@ const Login = () => {
 									photoURL: photoURL,
 								})
 							);
-							navigate("/browse");
 						})
 						.catch((error) => {
 							setErrorMessage(error.message);
 						});
-					console.log(user);
 				})
 				.catch((error) => {
 					const errorCode = error.code;
@@ -77,7 +74,6 @@ const Login = () => {
 				.then((userCredential) => {
 					// Signed in
 					const user = userCredential.user;
-					navigate("/browse");
 				})
 				.catch((error) => {
 					const errorCode = error.code;
@@ -91,11 +87,7 @@ const Login = () => {
 		<div>
 			<Header />
 			<div>
-				<img
-					className="absolute"
-					src="https://assets.nflxext.com/ffe/siteui/vlv3/ab180a27-b661-44d7-a6d9-940cb32f2f4a/7fb62e44-31fd-4e1f-b6ad-0b5c8c2a20ef/IN-en-20231009-popsignuptwoweeks-perspective_alpha_website_large.jpg"
-					alt="Background Img"
-				/>
+				<img className="absolute" src={BACKGROUND_IMG} alt="Background Img" />
 			</div>
 			<form
 				onSubmit={(e) => e.preventDefault()}
