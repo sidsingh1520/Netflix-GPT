@@ -23,13 +23,18 @@ const Login = () => {
 	const dispatch = useDispatch();
 
 	const toggleSignInForm = () => {
+		setErrorMessage(null);
 		setIsSignInForm(!isSignInForm);
 	};
 
 	const handleButtonClick = () => {
 		//validate the form data
 		setLoading(true);
-		const message = checkValidData(email.current.value, password.current.value);
+		const message = checkValidData(
+			email.current.value,
+			password.current.value,
+			isSignInForm
+		);
 		setErrorMessage(message);
 		if (message) {
 			setLoading(false);
