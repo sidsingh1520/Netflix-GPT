@@ -7,10 +7,10 @@ export const checkValidData = (email, password) => {
 		/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/.test(password);
 
 	if (!isEmailValid) {
-		return "Email ID is not Valid";
+		return "Email format incorrect";
 	}
 	if (!isPasswordValid) {
-		return "Password is not valid";
+		return "Password format incorrect(Min 8 characters with A-Z,a-z,special character)";
 	}
 	return null;
 };

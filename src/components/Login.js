@@ -11,10 +11,12 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BACKGROUND_IMG } from "../utils/constants";
 import { USER_AVATAR } from "../utils/constants";
+import Loading from "./Loading";
 
 const Login = () => {
 	const [isSignInForm, setIsSignInForm] = useState(true);
 	const [errorMessage, setErrorMessage] = useState(null);
+	const [loading, setLoading] = useState(false);
 	const email = useRef(null);
 	const password = useRef(null);
 	const name = useRef(null);
@@ -26,9 +28,13 @@ const Login = () => {
 
 	const handleButtonClick = () => {
 		//validate the form data
+		setLoading(true);
 		const message = checkValidData(email.current.value, password.current.value);
 		setErrorMessage(message);
-		if (message) return;
+		if (message) {
+			setLoading(false);
+			return;
+		}
 		if (!isSignInForm) {
 			//sign up logic
 			createUserWithEmailAndPassword(
@@ -54,17 +60,21 @@ const Login = () => {
 									photoURL: photoURL,
 								})
 							);
+							setLoading(false);
 						})
 						.catch((error) => {
 							setErrorMessage(error.message);
+							setLoading(false);
 						});
 				})
 				.catch((error) => {
 					const errorCode = error.code;
 					const errorMessage = error.message;
 					setErrorMessage(errorMessage);
+					setLoading(false);
 				});
 		} else {
+			setLoading(true);
 			// sign in logic
 			signInWithEmailAndPassword(
 				auth,
@@ -74,11 +84,13 @@ const Login = () => {
 				.then((userCredential) => {
 					// Signed in
 					const user = userCredential.user;
+					setLoading(false);
 				})
 				.catch((error) => {
 					const errorCode = error.code;
 					const errorMessage = error.message;
 					setErrorMessage(errorMessage);
+					setLoading(false);
 				});
 		}
 	};
@@ -88,7 +100,7 @@ const Login = () => {
 			<Header />
 			<div className="absolute">
 				<img
-					className="h-screen object-cover md:w-full"
+					className="h-screen object-cover md:w-full md:h-auto"
 					src={BACKGROUND_IMG}
 					alt="Background Img"
 				/>
@@ -116,12 +128,12 @@ const Login = () => {
 				)}
 				<input
 					ref={password}
-					type="text"
+					type="password"
 					placeholder="Password"
 					className="p-4 my-4 w-full bg-gray-800"
 				/>
 				{errorMessage && (
-					<p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
+					<p className="text-red-500 font-bold text-sm py-2">{errorMessage}</p>
 				)}
 				<button
 					className="p-4 my-4 bg-red-700 w-full rounded-lg"
@@ -129,6 +141,11 @@ const Login = () => {
 				>
 					{isSignInForm ? "Sign In" : "Sign Up"}
 				</button>
+				{loading && (
+					<div className="flex justify-center">
+						<Loading />
+					</div>
+				)}
 				<p className="py-4" onClick={toggleSignInForm}>
 					{isSignInForm
 						? "New to Netflix? Sign Up Now"
